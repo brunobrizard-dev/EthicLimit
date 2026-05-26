@@ -17,7 +17,3 @@ cat > .gitignore << 'EOF'
 Thumbs.db
 ehthumbs.db
 EOF
-
-git add .gitignore
-git commit -m "Add .gitignore"
-git push
