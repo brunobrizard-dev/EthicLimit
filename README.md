@@ -15,7 +15,7 @@ Ce projet s'inscrit dans le cadre du projet de recherche **BioPsycAnimEx** finan
 
 **Coordinatrice scientifique :** Antonine Nicoglou, Université de Tours  
 **Partenaire :** iBrain — Université de Tours  
-**Financement ANR :** 312 134 € · Septembre 2022 — 36 mois
+
 
 ---
 
@@ -64,8 +64,8 @@ Pipeline : **build → deploy → GitLab Pages**
 ## Réalisé avec
 
 - **Antonine Nicoglou** — Coordinatrice scientifique, Université de Tours
-- **Bueno Brizard** — FabLab, Faculté de Médecine de Tours
-- **Étudiants L3 Neurosciences** — Université de Tours
+- **Bruno Brizard** — iBraiN, Université de Tours
+- **Étudiants L3 Médecine** — Université de Tours
 - **Projet ANR BioPsycAnimEx** — ANR-22-CE54-0004
 
 ---
