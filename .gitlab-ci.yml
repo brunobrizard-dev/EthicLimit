@@ -1,4 +1,17 @@
-cat > .gitlab-ci.yml << 'EOF'
+stages:
+  - test
+  - secret-detection
+  - deploy
+
+variables:
+  SECRET_DETECTION_ENABLED: 'true'
+
+secret_detection:
+  stage: secret-detection
+
+include:
+  - template: Security/Secret-Detection.gitlab-ci.yml
+
 pages:
   stage: deploy
   script:
@@ -10,9 +23,4 @@ pages:
     paths:
       - public
   only:
-    - master
-EOF
-
-git add .gitlab-ci.yml
-git commit -m "Add GitLab Pages CI"
-git push
+    - main
