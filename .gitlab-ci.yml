@@ -1,0 +1,18 @@
+cat > .gitlab-ci.yml << 'EOF'
+pages:
+  stage: deploy
+  script:
+    - mkdir -p public
+    - cp index.html public/
+    - cp cover.png public/
+    - cp *.mp3 public/
+  artifacts:
+    paths:
+      - public
+  only:
+    - master
+EOF
+
+git add .gitlab-ci.yml
+git commit -m "Add GitLab Pages CI"
+git push
