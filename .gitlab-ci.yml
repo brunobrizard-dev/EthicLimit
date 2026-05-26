@@ -1,26 +1,19 @@
-stages:
-  - test
-  - secret-detection
-  - deploy
+mkdir -p ~/EthicLimit/.github/workflows
+cat > ~/EthicLimit/.github/workflows/deploy.yml << 'EOF'
+name: Deploy Pages
 
-variables:
-  SECRET_DETECTION_ENABLED: 'true'
+on:
+  push:
+    branches: [main]
 
-secret_detection:
-  stage: secret-detection
-
-include:
-  - template: Security/Secret-Detection.gitlab-ci.yml
-
-pages:
-  stage: deploy
-  script:
-    - mkdir -p public
-    - cp index.html public/
-    - cp cover.png public/
-    - cp *.mp3 public/
-  artifacts:
-    paths:
-      - public
-  only:
-    - main
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./
+EOF
