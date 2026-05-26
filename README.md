@@ -1,7 +1,6 @@
 # EthicLimit — Podcasts sur l'évaluation comportementale animale
 
-> Série de podcasts pédagogiques réalisés par des étudiants de Licence 3 Neurosciences  
-> de la Faculté de Médecine de Tours, en collaboration avec le **FabLab de l'Université de Tours**.
+> Série de podcasts pédagogiques réalisés par des étudiants de Licence de la Faculté de Médecine de Tours, en collaboration avec le **FabLab de l'Université de Tours**.
 
 ---
 
@@ -14,7 +13,7 @@ Ce projet s'inscrit dans le cadre du projet de recherche **BioPsycAnimEx** finan
 > Les troubles psychiatriques représentent un problème majeur de santé publique. Ce projet interroge pourquoi l'expérimentation animale est devenue centrale dans la recherche préclinique en psychiatrie, et si cette centralité est justifiée — à travers une enquête historique et une analyse philosophique menée au sein d'un laboratoire de psychiatrie translationnelle (iBrain, Université de Tours).
 
 **Coordinatrice scientifique :** Antonine Nicoglou, Université de Tours  
-**Partenaire :** iBrain — Université de Tours  
+**Partenaire :** iBrain — Université de Tours - INSERM
 
 
 ---
