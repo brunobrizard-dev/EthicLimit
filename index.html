@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EthicLimit — Évaluations comportementales</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:      #16213e;
+  --surface: #1a1a2e;
+  --s2:      #1f2b47;
+  --s3:      #243354;
+  --border:  rgba(255,255,255,0.08);
+  --border2: rgba(255,255,255,0.14);
+  --accent:  #e94560;
+  --text:    #dde1ec;
+  --text2:   #8b93aa;
+  --text3:   #50596e;
+  --r: 10px;
+  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+}
+
+html, body { height: 100%; background: var(--bg); }
+
+body {
+  font-family: var(--font);
+  color: var(--text);
+  font-size: 14px;
+  min-height: 100vh;
+  padding: 40px 20px 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ── Hero ── */
+.hero {
+  width: 100%;
+  max-width: 720px;
+  display: flex;
+  gap: 28px;
+  align-items: flex-start;
+  margin-bottom: 32px;
+}
+
+.cover-wrap {
+  flex-shrink: 0;
+  position: relative;
+}
+
+.cover {
+  width: 140px;
+  height: 140px;
+  border-radius: 12px;
+  object-fit: cover;
+  border: 1px solid var(--border2);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.5);
+  display: block;
+}
+
+/* spinning animation when playing */
+@keyframes spin { to { transform: rotate(360deg); } }
+.cover.spinning { animation: spin 12s linear infinite; border-radius: 50%; }
+
+.hero-info {
+  flex: 1;
+  min-width: 0;
+  padding-top: 4px;
+}
+
+.hero-tag {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.hero-title {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.25;
+  margin-bottom: 6px;
+  letter-spacing: -0.01em;
+}
+
+.hero-sub {
+  font-size: 12.5px;
+  color: var(--text2);
+  margin-bottom: 16px;
+}
+
+.hero-now {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  padding: 10px 14px;
+  display: none;
+}
+.hero-now.visible { display: block; }
+
+.hero-now-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+
+.hero-now-title {
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 2px;
+}
+
+.hero-now-authors {
+  font-size: 11px;
+  color: var(--text3);
+}
+
+/* ── Track list ── */
+.tracklist {
+  width: 100%;
+  max-width: 720px;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--r);
+  overflow: hidden;
+}
+
+.track {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 18px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.12s;
+  user-select: none;
+}
+.track:last-child { border-bottom: none; }
+.track:hover  { background: var(--s2); }
+.track.active { background: rgba(233,69,96,0.1); }
+
+.track-btn {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--border2);
+  background: var(--s3);
+  color: var(--text2);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.12s;
+}
+.track:hover .track-btn  { border-color: var(--accent); color: var(--accent); }
+.track.active .track-btn { background: var(--accent); border-color: var(--accent); color: white; }
+
+@keyframes eq { 0%,100%{height:3px} 50%{height:13px} }
+.eq { display:none; align-items:flex-end; justify-content:center; gap:2px; width:14px; height:14px; }
+.eq span { width:3px; border-radius:2px; background:white; animation:eq 0.75s ease-in-out infinite; }
+.eq span:nth-child(2){animation-delay:.13s}
+.eq span:nth-child(3){animation-delay:.26s}
+.track.active.is-playing .play-icon { display:none; }
+.track.active.is-playing .eq        { display:flex; }
+
+.track-num {
+  font-size: 12px; color: var(--text3);
+  width: 18px; text-align: right; flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+.track.active .track-num { display: none; }
+
+.track-info { flex: 1; min-width: 0; }
+
+.track-title {
+  font-size: 13.5px; font-weight: 600;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  margin-bottom: 3px;
+}
+.track.active .track-title { color: var(--accent); }
+
+.track-authors {
+  font-size: 11.5px; color: var(--text3);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+.track-dur {
+  font-size: 11.5px; color: var(--text3);
+  white-space: nowrap; font-variant-numeric: tabular-nums; flex-shrink: 0;
+}
+
+/* ── Player bar ── */
+.playerbar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: 76px;
+  background: var(--surface);
+  border-top: 1px solid var(--border2);
+  display: flex;
+  align-items: center;
+  padding: 0 16px 0 12px;
+  gap: 12px;
+  z-index: 100;
+}
+
+.bar-cover {
+  width: 48px; height: 48px;
+  border-radius: 6px;
+  object-fit: cover;
+  border: 1px solid var(--border2);
+  flex-shrink: 0;
+}
+
+.bar-info { width: 170px; flex-shrink: 0; min-width: 0; }
+.bar-title {
+  font-size: 12px; font-weight: 600;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.bar-sub {
+  font-size: 10.5px; color: var(--text3); margin-top: 2px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+.bar-center {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; gap: 5px; max-width: 480px;
+}
+
+.bar-btns { display: flex; align-items: center; gap: 4px; }
+
+.bctrl {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: transparent; border: none;
+  color: var(--text2); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; transition: all 0.12s;
+}
+.bctrl:hover { background: var(--s2); color: var(--text); }
+
+.bctrl.pp {
+  width: 40px; height: 40px;
+  background: var(--accent); color: white;
+}
+.bctrl.pp:hover { background: #c73652; }
+
+.bctrl.sk {
+  font-size: 10px; font-weight: 700;
+  width: 36px; border-radius: 16px;
+  border: 1px solid var(--border2); background: var(--s2);
+}
+.bctrl.sk:hover { border-color: var(--accent); color: var(--accent); }
+
+.bar-prog { display: flex; align-items: center; gap: 8px; width: 100%; }
+
+.btime {
+  font-size: 10px; color: var(--text3); width: 34px; flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+.btime.end { text-align: right; }
+
+.btrack {
+  flex: 1; height: 3px; background: var(--s3);
+  border-radius: 3px; cursor: pointer; position: relative;
+}
+.btrack:hover { height: 5px; }
+
+.bfill {
+  height: 100%; background: var(--accent); border-radius: 3px;
+  pointer-events: none; position: absolute; top: 0; left: 0; width: 0%;
+}
+
+.bar-right {
+  display: flex; align-items: center; gap: 10px;
+  margin-left: auto; flex-shrink: 0;
+}
+
+.spd {
+  font-size: 11px; font-weight: 700;
+  background: var(--s2); border: 1px solid var(--border2);
+  color: var(--text2); padding: 4px 10px; border-radius: 6px;
+  cursor: pointer; transition: all 0.12s;
+}
+.spd:hover { border-color: var(--accent); color: var(--accent); }
+
+.vol-row { display: flex; align-items: center; gap: 7px; }
+.vol-ico { color: var(--text3); display: flex; }
+
+input[type=range].vol {
+  -webkit-appearance: none; appearance: none;
+  width: 78px; height: 3px;
+  background: var(--s3); border-radius: 3px;
+  outline: none; cursor: pointer;
+}
+input[type=range].vol::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 13px; height: 13px; border-radius: 50%;
+  background: var(--text2); cursor: pointer;
+}
+
+audio { display: none; }
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-thumb { background: var(--s3); border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<!-- ── Hero ── -->
+<div class="hero">
+  <div class="cover-wrap">
+    <img class="cover" id="heroCover" src="cover.png" alt="Jaquette EthicLimit">
+  </div>
+  <div class="hero-info">
+    <div class="hero-tag">Licence 3 Neurosciences · Université de Tours</div>
+    <div class="hero-title">EthicLimit<br>Évaluations comportementales</div>
+    <div class="hero-sub">4 épisodes · Tests sur le comportement animal</div>
+    <div class="hero-now" id="heroNow">
+      <div class="hero-now-label">En cours de lecture</div>
+      <div class="hero-now-title"   id="heroNowTitle">—</div>
+      <div class="hero-now-authors" id="heroNowAuthors">—</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Track list ── -->
+<div class="tracklist" id="tracklist"></div>
+
+<audio id="audio"></audio>
+
+<!-- ── Player bar ── -->
+<div class="playerbar">
+  <img class="bar-cover" id="barCover" src="cover.png" alt="">
+
+  <div class="bar-info">
+    <div class="bar-title" id="barTitle">Sélectionner un épisode</div>
+    <div class="bar-sub"   id="barSub">—</div>
+  </div>
+
+  <div class="bar-center">
+    <div class="bar-btns">
+      <button class="bctrl" onclick="prevTrack()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg>
+      </button>
+      <button class="bctrl sk" onclick="skip(-15)">−15s</button>
+      <button class="bctrl pp" id="ppBtn" onclick="togglePlay()">
+        <svg id="ppIcon" width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+      </button>
+      <button class="bctrl sk" onclick="skip(15)">+15s</button>
+      <button class="bctrl" onclick="nextTrack()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zm8.5-6v6h2V6h-2v6z"/></svg>
+      </button>
+    </div>
+    <div class="bar-prog">
+      <span class="btime"     id="cur">0:00</span>
+      <div  class="btrack"    id="progBar" onclick="seekClick(event)">
+        <div class="bfill" id="fill"></div>
+      </div>
+      <span class="btime end" id="tot">0:00</span>
+    </div>
+  </div>
+
+  <div class="bar-right">
+    <button class="spd" id="spdBtn" onclick="cycleSpeed()">1.0×</button>
+    <div class="vol-row">
+      <span class="vol-ico">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+          <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+        </svg>
+      </span>
+      <input type="range" class="vol" id="volSlider" min="0" max="1" step="0.02" value="0.8" oninput="setVolume(this.value)">
+    </div>
+  </div>
+</div>
+
+<script>
+const TRACKS = [
+  { title:"Sociabilité à 3 compartiments",             full:"Sociabilité à 3 compartiments — Comportement social du rongeur", authors:"A. Pinto & Sorel Defo Tedefo",  file:"01 - Sociabilite_3_compartiments.mp3" },
+  { title:"Open Field",                                full:"Open Field — Exploration et anxiété spontanée",                  authors:"L. Freyther & G. Brand",         file:"02 - Open_Field.mp3" },
+  { title:"Labyrinthe de Morris",                      full:"Labyrinthe de Morris — Mémoire spatiale hippocampique",          authors:"H. Leloup & E. Lemaux",          file:"03 - Labyrinthe_de_Morris.mp3" },
+  { title:"Rotarod",                                   full:"Rotarod — Coordination et équilibre moteur",                     authors:"S. Al Khadir & R. Ben Jrad",     file:"04 - Rotarod.mp3" },
+];
+
+const audio  = document.getElementById('audio');
+const cover  = document.getElementById('heroCover');
+let cur      = -1;
+let speeds   = [0.75, 1.0, 1.25, 1.5, 2.0];
+let spdI     = 1;
+
+function render() {
+  document.getElementById('tracklist').innerHTML = TRACKS.map((t, i) => `
+    <div class="track${cur===i?' active':''}" id="tr${i}" onclick="selectTrack(${i})">
+      <div class="track-btn">
+        <span class="play-icon">
+          ${cur===i
+            ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>'
+            : '<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>'}
+        </span>
+        <div class="eq"><span></span><span></span><span></span></div>
+      </div>
+      <span class="track-num">${i+1}</span>
+      <div class="track-info">
+        <div class="track-title">${t.full}</div>
+        <div class="track-authors">${t.authors}</div>
+      </div>
+      <span class="track-dur" id="dur${i}">—</span>
+    </div>`).join('');
+}
+
+function selectTrack(i) {
+  if (cur === i) { togglePlay(); return; }
+  cur = i;
+  const t = TRACKS[i];
+  audio.src = t.file;
+  audio.playbackRate = speeds[spdI];
+  audio.play();
+  // bar
+  document.getElementById('barTitle').textContent = t.full;
+  document.getElementById('barSub').textContent   = t.authors;
+  // hero now-playing card
+  document.getElementById('heroNow').classList.add('visible');
+  document.getElementById('heroNowTitle').textContent   = t.full;
+  document.getElementById('heroNowAuthors').textContent = t.authors;
+  setIcon(true);
+  render();
+}
+
+function togglePlay() {
+  if (cur < 0) return;
+  if (audio.paused) { audio.play(); setIcon(true); }
+  else              { audio.pause(); setIcon(false); }
+}
+
+function setIcon(playing) {
+  document.getElementById('ppIcon').innerHTML = playing
+    ? '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>'
+    : '<path d="M8 5v14l11-7z"/>';
+  document.querySelectorAll('.track').forEach(r => r.classList.remove('is-playing'));
+  if (playing && cur >= 0) document.getElementById('tr'+cur)?.classList.add('is-playing');
+  // spin cover when playing
+  cover.classList.toggle('spinning', playing);
+}
+
+function prevTrack() { if (cur > 0) selectTrack(cur - 1); }
+function nextTrack() { if (cur < TRACKS.length - 1) selectTrack(cur + 1); }
+
+function skip(s) {
+  if (cur < 0) return;
+  audio.currentTime = Math.max(0, Math.min(audio.duration || 0, audio.currentTime + s));
+}
+
+function seekClick(e) {
+  if (cur < 0 || !audio.duration) return;
+  const r = document.getElementById('progBar').getBoundingClientRect();
+  audio.currentTime = ((e.clientX - r.left) / r.width) * audio.duration;
+}
+
+function cycleSpeed() {
+  spdI = (spdI + 1) % speeds.length;
+  audio.playbackRate = speeds[spdI];
+  const label = speeds[spdI] % 1 === 0 ? speeds[spdI]+'×' : speeds[spdI].toFixed(2).replace(/0$/,'')+'×';
+  document.getElementById('spdBtn').textContent = label;
+}
+
+function setVolume(v) { audio.volume = v; }
+
+function fmt(s) {
+  if (!s || isNaN(s)) return '0:00';
+  s = Math.floor(s);
+  const h = ~~(s/3600), m = ~~((s%3600)/60), ss = s%60;
+  if (h) return `${h}:${String(m).padStart(2,'0')}:${String(ss).padStart(2,'0')}`;
+  return `${m}:${String(ss).padStart(2,'0')}`;
+}
+
+audio.addEventListener('timeupdate', () => {
+  if (!audio.duration) return;
+  document.getElementById('fill').style.width = (audio.currentTime / audio.duration * 100) + '%';
+  document.getElementById('cur').textContent  = fmt(audio.currentTime);
+  document.getElementById('tot').textContent  = fmt(audio.duration);
+});
+
+audio.addEventListener('loadedmetadata', () => {
+  document.getElementById('tot').textContent = fmt(audio.duration);
+  if (cur >= 0) document.getElementById('dur'+cur).textContent = fmt(audio.duration);
+});
+
+audio.addEventListener('ended', () => {
+  setIcon(false); nextTrack();
+});
+audio.addEventListener('pause', () => setIcon(false));
+audio.addEventListener('play',  () => setIcon(true));
+
+audio.volume = 0.8;
+render();
+</script>
+</body>
+</html>
