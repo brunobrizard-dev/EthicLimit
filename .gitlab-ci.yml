@@ -17,3 +17,8 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./
 EOF
+
+
+git add .github/
+git commit -m "Add GitHub Actions deploy"
+git push github main
