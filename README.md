@@ -1,6 +1,6 @@
 # EthicLimit — Podcasts sur l'évaluation comportementale animale
 
-> Série de podcasts pédagogiques réalisés par des étudiants de Licence de la Faculté de Médecine de Tours, en collaboration avec le **FabLab de l'Université de Tours**.
+> Série de podcasts pédagogiques réalisés par des étudiants de Licence de la Faculté de Médecine de Tours, en collaboration avec le **FacLab de l'Université de Tours**.
 
 ---
 
