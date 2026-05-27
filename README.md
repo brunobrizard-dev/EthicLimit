@@ -31,7 +31,7 @@ Ce projet s'inscrit dans le cadre du projet de recherche **BioPsycAnimEx** finan
 
 ## Écouter
 
-🎧 **[Accéder au lecteur en ligne]([https://brunobrizard-dev.github.io/ethiclimit/](https://brunobrizard-dev.github.io/EthicLimit/))**
+🎧 **[Accéder au lecteur en ligne](https://brunobrizard-dev.github.io/EthicLimit/)**
 
 Le lecteur est hébergé sur GitLab Pages de l'Université de Tours. Il fonctionne directement dans le navigateur, sans installation.
 
